@@ -17,7 +17,7 @@ function fire_ajax_submit() {
     if($("#name").val() !== ""){
     	search["nameLike"] = $("#name").val();
     }
-    //search["nameEquals"] = $("#name").val();
+    search["nameEquals"] = $("#name").val();
     search["sort"] = $("#sort").val();
     search["page"] = $("#page").val();
     search["pageSize"] = $("#pageSize").val();

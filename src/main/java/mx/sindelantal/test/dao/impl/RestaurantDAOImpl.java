@@ -24,9 +24,8 @@ public class RestaurantDAOImpl extends BaseDAO implements RestaurantDAO{
         if(restaurant.getOpenSince() == null){
             restaurant.setOpenSince(new Date());
         }
-        String SQL = "insert into restaurant (name, rating, open_since) values (:name, :rating, :open_since)";
+        String SQL = "insert into restaurant (name, open_since) values (:name, :open_since)";
         params.put("name", restaurant.getName());
-        params.put("rating", restaurant.getRating()); 
         params.put("open_since", restaurant.getOpenSince());
         new NamedParameterJdbcTemplate(jdbcTemplate).update(SQL, params);
         return;
@@ -89,9 +88,8 @@ public class RestaurantDAOImpl extends BaseDAO implements RestaurantDAO{
 
     public void update(Restaurant restaurant){
         Map<String, Object> params = new HashMap<String, Object>();
-        String SQL = "update restaurant set name = :name, rating = :rating where id = :id";
+        String SQL = "update restaurant set name = :name, where id = :id";
         params.put("name", restaurant.getName());
-        params.put("rating", restaurant.getRating());
         params.put("id", restaurant.getId());
         new NamedParameterJdbcTemplate(jdbcTemplate).update(SQL, params);
         return;

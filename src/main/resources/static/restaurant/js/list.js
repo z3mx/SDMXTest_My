@@ -2,12 +2,19 @@ $(document).ready(function () {
 
     $("#search-form").submit(function (event) {
 
-        //stop submit the form, we will post it manually.
         event.preventDefault();
 
         fire_ajax_submit();
 
     });
+    $("#bth-list").on("click", function (event) {
+
+        event.preventDefault();
+
+        fire_ajax_list_submit();
+
+    });
+    
 
 });
 
@@ -32,6 +39,9 @@ function fire_ajax_submit() {
         dataType: 'json',
         cache: false,
         timeout: 600000,
+        beforeSend: function(){
+        	$('#message').html("").removeClass("alert-danger");
+        },
         success: function (data) {
         	var list = "";
         	if(data.binaryStatus == "success"){
@@ -46,24 +56,52 @@ function fire_ajax_submit() {
                     list += "<li>"+item +"</li>";
                 });
             	list += "</ul>"
-            	$('#message').html(list).addClass("alert alert-danger");
+            	$('#message').html(list).addClass("alert-danger");
         	}
-        	
-        	
-        	
-        	
-            $("#btn-search").prop("disabled", false);
-            
-            
+        	$("#btn-search").prop("disabled", false);
             
         },
         error: function (e) {
-        	var errorResponse = "";
-            $('#feedback').html(json);
-
+        	$('#message').html("Se ha producido un error interno").addClass("alert-danger");
             $("#btn-search").prop("disabled", false);
 
         }
     });
 
+}
+
+function fire_ajax_list_submit(){
+	$.ajax({
+        type: "GET",
+        contentType: "application/json",
+        url: "/api/restaurant/list",
+        cache: false,
+        timeout: 600000,
+        beforeSend: function(){
+        	$('#message').html("").removeClass("alert-danger");
+        },
+        success: function (data) {
+        	var list = "";
+        	if(data.binaryStatus == "success"){
+        		$.each(data.result, function(i, item) {
+                	list += "<li class=\"list-group-item\">"+item.name +"<span class=\"badge\">"+item.rating+"</span></li>";
+                });
+        		$('#list-group').html(list);
+        	}
+        	if(data.binaryStatus == "error"){
+        		list += "<ul>"
+            	$.each(data.result, function(i, item) {
+                    list += "<li>"+item +"</li>";
+                });
+            	list += "</ul>"
+            	$('#message').html(list).addClass("alert-danger");
+        	}
+        	$("#btn-search").prop("disabled", false);
+            
+        },
+        error: function (e) {
+        	$('#message').html("Se ha producido un error interno").addClass("alert-danger");
+            $("#btn-search").prop("disabled", false);
+        }
+    });
 }

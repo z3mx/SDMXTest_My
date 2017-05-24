@@ -48,3 +48,12 @@ El codigo creado por el aspirante sera evaluado con tres criterios:
 
 - Funcionalidad.
 
+## Entrega de la evaluación.
+
+El flujo para realizar la evaluación es:
+
+1. Hacer un fork del proyecto.
+
+2. Crear un nuevo branch en el cual se implementaran las soluciones.
+
+3. Una vez listo para revisión enviar a el contacto el remote/branch para que se haga la revisión.

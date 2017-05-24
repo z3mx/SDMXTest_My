@@ -34,6 +34,10 @@ siquientes problemas dentro de el proyecto:
 3. Crear un nuevo endpoint o funcionalidad para listar Restaurantes ordenados por su rating y porcentaje de ordenes canceladas, el factor mas fuerte es el rating sin embargo
 el porcentaje de pedidos cancelados modifica la posicion del restaurante.
 
+Para ver un ejemplo de una llamada a un endpoint se puede navegar a:
+
+http://localhost:8080/restaurant/list
+
 ## Criterios a evaluar
 
 El codigo creado por el aspirante sera evaluado con tres criterios:

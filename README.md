@@ -57,3 +57,5 @@ El flujo para realizar la evaluación es:
 2. Crear un nuevo branch en el cual se implementaran las soluciones.
 
 3. Una vez listo para revisión enviar a el contacto el remote/branch para que se haga la revisión.
+
+__Importante:__ No crear pull request para los cambios.

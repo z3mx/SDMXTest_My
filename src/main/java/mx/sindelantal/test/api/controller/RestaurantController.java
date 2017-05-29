@@ -41,12 +41,43 @@ public class RestaurantController {
         result.setResult(restaurants);
         return result;
     }
+    
+    @RequestMapping(value = "/listByRating", method = RequestMethod.GET)
+    public JsonResponse listByRating() {
+        JsonResponse result = new JsonResponse();
+        
+        List<Restaurant> restaurants = restaurantService.listRestaurantsRating();
+        if (restaurants.isEmpty() || restaurants ==null) {
+            result.setMessage("No restaurants found!");
+        } else {
+            result.setMessage("List of restaurants");
+        }
+        result.setBinaryStatus("success"); 
+        result.setStatus(HttpStatus.OK);
+        result.setResult(restaurants);
+        return result;
+    }
+    
+    @RequestMapping(value = "/listByRC", method = RequestMethod.GET)
+    public JsonResponse listByRC() {
+        JsonResponse result = new JsonResponse();
+        
+        List<Restaurant> restaurants = restaurantService.listRestaurantsRC();
+        if (restaurants.isEmpty() || restaurants ==null) {
+            result.setMessage("No restaurants found!");
+        } else {
+            result.setMessage("List of restaurants");
+        }
+        result.setBinaryStatus("success"); 
+        result.setStatus(HttpStatus.OK);
+        result.setResult(restaurants);
+        return result;
+    }
 
     @PostMapping("/search")
     public JsonResponse search(@RequestBody RestaurantFilter restaurantFilter) {
-
         JsonResponse result = new JsonResponse();
-
+        
         List<Restaurant> restaurants = restaurantService.searchRestaurants(restaurantFilter);
         if (restaurants.isEmpty()) {
             result.setMessage("No restaurants found!");

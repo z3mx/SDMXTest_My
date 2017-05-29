@@ -33,6 +33,22 @@ public interface RestaurantDAO {
    public List<Restaurant> listRestaurants();
    
    /** 
+    * This is the method to be used to list down
+    * all the records from the restaurant table
+    * by rating
+   */
+   public List<Restaurant> listRestaurantsRating();//
+   
+   /** 
+    * This is the method to be used to list down
+    * all the records from the restaurant table
+    * by rating and cancelled orders formule
+    * % cancelled orders = (100/total orders) X (order status = cancelled)
+    * rating -(rating/ (% cancelled orders))
+   */
+   public List<Restaurant> listRestaurantsRatingCancelled();//
+   
+   /** 
       * This is the method to be used to list down
       * all the records from the restaurant table with its
       * associated orders.

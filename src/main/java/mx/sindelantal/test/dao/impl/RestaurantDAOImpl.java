@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.*;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
@@ -58,6 +59,40 @@ public class RestaurantDAOImpl extends BaseDAO implements RestaurantDAO{
         List <Restaurant> restaurants = new NamedParameterJdbcTemplate(jdbcTemplate).query(SQL, new RestaurantMapper());
         return restaurants;
     }
+    
+    public List<Restaurant> listRestaurantsRating() {
+        String SQL = "select r.id, r.name, r.open_since, sum(ro.rating)/count(ro.id) as rating"
+                + " from  restaurant r"
+                + " left join delivery_order o on o.restaurant_id = r.id"
+                + " left join review_order ro on ro.order_id = o.id where 1=1"
+                + " group by r.id"
+                + " order by sum(ro.rating)/count(ro.id) DESC";
+        List <Restaurant> restaurants = new NamedParameterJdbcTemplate(jdbcTemplate).query(SQL, new RestaurantMapper());
+        return restaurants;
+    }
+    
+    public List<Restaurant> listRestaurantsRatingCancelled() {
+    	List <Restaurant> restaurants = new ArrayList<Restaurant>();
+    	List <Restaurant> restaurantsRating = this.listRestaurantsRating();
+        String SQL = "select  r.*,round(sum(o.order_status='cancelled') * (100/count(o.id)),2) as rating from restaurant r "
+        		+ "	left join delivery_order o on o.restaurant_id = r.id"
+        		+ " where r.id = restaurant_id"
+        		+ " group by r.id";
+        List <Restaurant> restaurantsCancelled = new NamedParameterJdbcTemplate(jdbcTemplate).query(SQL, new RestaurantMapper());
+        for(Restaurant rR :restaurantsRating){
+        	for(Restaurant rC:restaurantsCancelled){
+        		if(rR.getName().equals(rC.getName())){
+        			double rating = rR.getRating().doubleValue();
+        			double cancelled = rC.getRating().doubleValue();
+        			double newRating = (rating)-((rating/100)*cancelled);
+        			rR.setRating(new BigDecimal(newRating));
+        			restaurants.add(rR);
+        			break;
+        		}
+        	}
+        }
+        return restaurants;
+    }
 
     public List<Restaurant> listRestaurantsWithOrders(){
         String SQL = "select * from restaurant";
@@ -67,11 +102,16 @@ public class RestaurantDAOImpl extends BaseDAO implements RestaurantDAO{
     
     public List<Restaurant> searchRestaurants(RestaurantFilter restaurantFilter){
         Map<String, Object> params = new HashMap<String, Object>();
-        String SQL = "select * from restaurant where 1=1 ";
+        String SQL = "select r.id, r.name, sum(ro.rating)/count(ro.id) as rating, r.open_since"
+        			+" from restaurant r"
+        			+" left join delivery_order o on o.restaurant_id = r.id "
+        			+" left join review_order ro on ro.order_id = o.id where 1=1 ";
         if(restaurantFilter.getNameLike() != null && !restaurantFilter.getNameLike().isEmpty()){
-            SQL+=" and name like :name ";
+            SQL +=" and name like :name ";
+            
             params.put("name", "%"+restaurantFilter.getNameLike()+"%");
         }
+        SQL	+=" group by r.id";
         List <Restaurant> restaurants = new NamedParameterJdbcTemplate(jdbcTemplate).query(SQL,
             params,
             new RestaurantMapper());

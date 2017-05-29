@@ -15,6 +15,16 @@ public class RestaurantController {
         return "restaurant/list";
     }
     
+    @RequestMapping(value = "/listByRating", method = RequestMethod.GET)
+    public String listByRating(Model model) {
+        return "restaurant/listByRating";
+    }
+    
+    @RequestMapping(value = "/listByRC", method = RequestMethod.GET)
+    public String listByRC(Model model) {
+        return "restaurant/listByRC";
+    }
+    
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public String create(Model model) {
         return "restaurant/create";
